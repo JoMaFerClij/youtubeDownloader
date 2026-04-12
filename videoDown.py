@@ -13,7 +13,7 @@ class VideoDownloaderApp:
         self.root.geometry("550x380")
         self.root.resizable(False, False)
         self.root.title("YouTube Downloader (yt-dlp)")
-        self.root.config(bg="PaleGreen1")
+        self.root.config(bg="LightSkyBlue")
 
         # Variables
         self.video_link = tk.StringVar()
@@ -32,7 +32,7 @@ class VideoDownloaderApp:
         tk.Label(self.root,
                  text="YouTube Video Downloader",
                  font="SegoeUI 14",
-                 bg="palegreen1",
+                 bg="LightSkyBlue",
                  fg="red").pack(pady=10)
 
         # URL
@@ -41,7 +41,7 @@ class VideoDownloaderApp:
 
         # Folder
         tk.Label(self.root, text="Download Folder:", bg="salmon").pack()
-        frame = tk.Frame(self.root, bg="palegreen1")
+        frame = tk.Frame(self.root, bg="LightSkyBlue")
         frame.pack()
 
         tk.Entry(frame, textvariable=self.download_path, width=40).pack(side=tk.LEFT)
@@ -64,7 +64,7 @@ class VideoDownloaderApp:
         # Status
         tk.Label(self.root,
                  textvariable=self.status_text,
-                 bg="palegreen1").pack()
+                 bg="LightSkyBlue").pack()
 
         # Download button
         tk.Button(self.root,

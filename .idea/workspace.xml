@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3aa6e1b2-6297-4b81-8d6c-bf3d6279b70c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/videoDown.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/videoDown.py" afterDir="false" />
+    <list default="true" id="3aa6e1b2-6297-4b81-8d6c-bf3d6279b70c" name="Changes" comment="Youtube downloader with GUI and selection of quality, URL and Path to save it.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/videoDown.py" beforeDir="false" afterPath="$PROJECT_DIR$/videoDown.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +23,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "JoMaFerClij"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/JoMaFerClij/youtubeDownloader.git",
+    "accountId": "ab3c3b14-18cf-4450-8d20-81b2c2e35eed"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -77,6 +84,19 @@
       <option name="presentableId" value="Default" />
       <updated>1775994204758</updated>
     </task>
+    <task id="LOCAL-00001" summary="Youtube downloader with GUI and selection of quality, URL and Path to save it.">
+      <option name="closed" value="true" />
+      <created>1776000765836</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776000765836</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Youtube downloader with GUI and selection of quality, URL and Path to save it." />
+    <option name="LAST_COMMIT_MESSAGE" value="Youtube downloader with GUI and selection of quality, URL and Path to save it." />
   </component>
 </project>
