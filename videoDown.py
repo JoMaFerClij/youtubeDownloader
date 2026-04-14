@@ -10,7 +10,7 @@ class VideoDownloaderApp:
         self.root = root
 
         # Window config
-        self.root.geometry("600x500")
+        self.root.geometry("650x520")
         self.root.resizable(False, False)
         self.root.title("YouTube Downloader (yt-dlp)")
         self.root.config(bg="LightSkyBlue")
@@ -20,10 +20,10 @@ class VideoDownloaderApp:
         self.download_path = tk.StringVar()
         self.progress_value = tk.DoubleVar()
         self.status_text = tk.StringVar(value="Idle")
-        self.quality = tk.StringVar(value="Best")
         self.selected_format = tk.StringVar()
 
-        self.formats = []  # store formats
+        self.formats = []
+        self.fetch_job = None  # for debounce
 
         self.create_widgets()
 
@@ -40,28 +40,26 @@ class VideoDownloaderApp:
 
         # URL
         tk.Label(self.root, text="Video URL:", bg="salmon").pack()
-        tk.Entry(self.root, textvariable=self.video_link, width=60).pack(pady=5)
+        entry = tk.Entry(self.root, textvariable=self.video_link, width=70)
+        entry.pack(pady=5)
+
+        # 🔥 AUTO DETECT when user types
+        self.video_link.trace_add("write", self.on_url_change)
 
         # Folder
         tk.Label(self.root, text="Download Folder:", bg="salmon").pack()
         frame = tk.Frame(self.root, bg="LightSkyBlue")
         frame.pack()
 
-        tk.Entry(frame, textvariable=self.download_path, width=45).pack(side=tk.LEFT)
+        tk.Entry(frame, textvariable=self.download_path, width=50).pack(side=tk.LEFT)
         tk.Button(frame, text="Browse", command=self.browse).pack(side=tk.LEFT, padx=5)
 
-        # Fetch formats button
-        tk.Button(self.root,
-                  text="Fetch Formats",
-                  command=self.fetch_formats,
-                  bg="lightyellow").pack(pady=5)
-
         # Format selector
-        tk.Label(self.root, text="Available Formats:", bg="salmon").pack()
+        tk.Label(self.root, text="Available Formats:", bg="salmon").pack(pady=5)
 
         self.format_combo = ttk.Combobox(self.root,
                                         textvariable=self.selected_format,
-                                        width=80,
+                                        width=90,
                                         state="readonly")
         self.format_combo.pack(pady=5)
 
@@ -69,7 +67,7 @@ class VideoDownloaderApp:
         ttk.Progressbar(self.root,
                         variable=self.progress_value,
                         maximum=100,
-                        length=450).pack(pady=15)
+                        length=500).pack(pady=15)
 
         # Status
         tk.Label(self.root,
@@ -82,6 +80,18 @@ class VideoDownloaderApp:
                   command=self.start_download,
                   bg="thistle1",
                   font=("Arial", 12)).pack(pady=15)
+
+    # -------------------------
+    # URL CHANGE (AUTO FETCH)
+    # -------------------------
+    def on_url_change(self, *args):
+
+        # Cancel previous scheduled fetch
+        if self.fetch_job:
+            self.root.after_cancel(self.fetch_job)
+
+        # Wait 1 second after typing stops
+        self.fetch_job = self.root.after(1000, self.fetch_formats)
 
     # -------------------------
     # ACTIONS
@@ -97,16 +107,31 @@ class VideoDownloaderApp:
         thread.start()
 
     def _fetch_formats_thread(self):
+
         url = self.video_link.get()
 
-        if not url:
-            messagebox.showerror("Error", "Enter a URL first")
+        if not url.strip():
             return
 
         self.update_status("Fetching formats...")
 
         try:
-            ydl_opts = {'quiet': True}
+            ydl_opts = {
+                'quiet': True,
+
+                'js_runtimes': {
+                    'node': {
+                        'path': r'C:\Program Files\nodejs\node.exe'
+                    }
+                },
+
+                # 🔥 NEW FIX
+                'remote_components': ['ejs:github'],
+
+                'http_headers': {
+                    'User-Agent': 'Mozilla/5.0'
+                }
+            }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
@@ -117,9 +142,10 @@ class VideoDownloaderApp:
             display_list = []
 
             for f in formats:
-                if f.get('vcodec') != 'none':  # video formats only
+                if f.get('vcodec') != 'none':
+
                     res = f.get('resolution') or f"{f.get('height')}p"
-                    fps = f.get('fps', '')
+                    fps = f.get('fps') or ""
                     size = f.get('filesize') or f.get('filesize_approx')
 
                     size_mb = f"{round(size / (1024*1024), 1)}MB" if size else "?"
@@ -129,6 +155,7 @@ class VideoDownloaderApp:
                     self.formats.append((label, f['format_id']))
                     display_list.append(label)
 
+            # Update UI safely
             self.root.after(0, self.format_combo.config, {'values': display_list})
 
             if display_list:
@@ -170,10 +197,6 @@ class VideoDownloaderApp:
                 format_id = fid
                 break
 
-        if not format_id:
-            messagebox.showerror("Error", "Invalid format")
-            return
-
         self.update_status("Downloading...")
 
         ydl_opts = {
@@ -183,8 +206,14 @@ class VideoDownloaderApp:
             'progress_hooks': [self.progress_hook],
             'noplaylist': True,
 
-            # 🔥 FIX JS WARNING
-            'js_runtimes': ['node'],
+            'js_runtimes': {
+                'node': {
+                    'path': r'C:\Program Files\nodejs\node.exe'
+                }
+            },
+
+            # 🔥 NEW FIX
+            'remote_components': ['ejs:github'],
 
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0'
