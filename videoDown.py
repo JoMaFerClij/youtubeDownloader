@@ -101,18 +101,35 @@ class VideoDownloaderApp:
 
         self.update_status("Starting download...")
 
+        # Base options
         ydl_opts = {
-            'outtmpl': f'{path}/%(title)s.%(ext)s',
+            'outtmpl': f'{path}/%(title)s [%(resolution)s].%(ext)s',
             'progress_hooks': [self.progress_hook],
+            'noplaylist': True,
+            'merge_output_format': 'mp4',
+
+            # Better format handling
+            'format_sort': ['res', 'fps', 'codec:h264'],
+
+            # Avoid broken formats
+            'ignoreerrors': False,
+
+            # Helps avoid 403 sometimes
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0'
+            }
         }
 
         # Quality selection
         if quality == "Best":
-            ydl_opts['format'] = 'best'
+            ydl_opts['format'] = 'bestvideo+bestaudio/best'
+
         elif quality == "1080p":
             ydl_opts['format'] = 'bestvideo[height<=1080]+bestaudio/best'
+
         elif quality == "720p":
             ydl_opts['format'] = 'bestvideo[height<=720]+bestaudio/best'
+
         elif quality == "Audio (MP3)":
             ydl_opts['format'] = 'bestaudio/best'
             ydl_opts['postprocessors'] = [{
